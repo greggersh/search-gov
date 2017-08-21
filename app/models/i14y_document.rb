@@ -44,7 +44,7 @@ class I14yDocument
     attributes = {}
     [:document_id, :title, :path, :created, :description, :content,
      :changed, :promote, :language, :tags].each do |attribute|
-        attributes[attribute] = send("#{attribute}")
+        attributes[attribute] = send(attribute)
     end
     attributes
   end
