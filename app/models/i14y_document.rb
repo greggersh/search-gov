@@ -5,14 +5,13 @@ class I14yDocument
   class I14yDocumentError < StandardError; end
 
   define_model_callbacks :save
-  before_save :set_document_id
 
   delegate :i14y_connection, to: :i14y_drawer
 
   attr_accessor :document_id, :title, :path, :created, :description, :content,
     :changed, :promote, :language, :tags, :handle
 
-  validates_presence_of :path, :handle
+  validates_presence_of :document_id, :path, :handle, :title
 
   def initialize(attributes = {})
     attributes.each do |name, value|
@@ -51,11 +50,5 @@ class I14yDocument
 
   def self.api_endpoint
     "/api/v1/documents".freeze
-  end
-
-  private
-
-  def set_document_id
-    self.document_id = path
   end
 end

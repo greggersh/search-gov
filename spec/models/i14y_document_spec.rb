@@ -23,6 +23,8 @@ describe I14yDocument do
   describe 'validations' do
     it { should validate_presence_of :path }
     it { should validate_presence_of :handle }
+    it { should validate_presence_of :document_id }
+    it { should validate_presence_of :title }
   end
 
   describe '#attributes' do
@@ -48,28 +50,15 @@ describe I14yDocument do
       document.save
     end
 
-    context 'when the document_id is not provided' do
-      let(:document) { I14yDocument.new(valid_attributes.except(:document_id))  }
+    context 'when the save is unsuccessful' do
       before do
         allow(i14y_connection).to receive(:post).
           with("/api/v1/documents", valid_attributes.except(:handle)).
-          and_return(Hashie::Mash.new(status: 201))
+          and_return(Hashie::Mash.new(status: 400))
       end
 
-      it 'sets the document_id' do
-        expect{ document.save }.to change{document.document_id}.from(nil).to(url)
-      end
-
-      context 'when the save is unsuccessful' do
-        before do
-          allow(i14y_connection).to receive(:post).
-            with("/api/v1/documents", valid_attributes.except(:handle)).
-            and_return(Hashie::Mash.new(status: 400))
-        end
-
-        it 'raises an error' do
-          expect{ document.save }.to raise_error
-        end
+      it 'raises an error' do
+        expect{ document.save }.to raise_error
       end
     end
   end
