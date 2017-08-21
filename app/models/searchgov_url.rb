@@ -20,8 +20,8 @@ class SearchgovUrl < ActiveRecord::Base
         self.url = response.uri.to_s
         index_document(html)
         self.last_crawl_status = OK_STATUS
-      rescue  => error
-        self.last_crawl_status = "#{error.message}"
+      rescue => error
+        self.last_crawl_status = error.message
         Rails.logger.error "Unable to index #{url} into searchgov:\n#{error.message}\n#{error.backtrace.first}"
       end
     end
@@ -41,15 +41,15 @@ class SearchgovUrl < ActiveRecord::Base
     document = HtmlDocument.new(document: file, url: url)
     Rails.logger.info "Indexing Searchgov URL #{url} into I14y"
     I14yDocument.create(
-                        handle: 'searchgov',
-                        path: url,
-                        title: document.title,
-                        content: document.parsed_content,
-                        description: document.description,
-                        language: document.language,
-                        tags: document.keywords,
-                        created: Time.now,
-                        )
+                         handle: 'searchgov',
+                         path: url,
+                         title: document.title,
+                         content: document.parsed_content,
+                         description: document.description,
+                         language: document.language,
+                         tags: document.keywords,
+                         created: Time.now,
+                       )
   end
 
   def omit_query

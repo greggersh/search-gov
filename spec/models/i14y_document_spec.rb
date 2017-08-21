@@ -9,7 +9,7 @@ describe I14yDocument do
     { document_id: url,
       title: 'My document title',
       path: url,
-      created: Time.now.to_s, #?
+      created: Time.now.to_s,
       description: 'My fascinating document',
       handle: 'searchgov'
     }
