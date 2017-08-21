@@ -1,6 +1,10 @@
 class HtmlDocument < WebDocument
   attr_accessor :html
 
+  def html
+    @html ||= Nokogiri::HTML(document)
+  end
+
   def title
     html.title.try(:strip) || url
   end
@@ -23,10 +27,6 @@ class HtmlDocument < WebDocument
   end
 
   private
-
-  def post_initialize
-    @html = Nokogiri::HTML(document)
-  end
 
   def remove_scripts_and_styles
     html.css('script').each(&:remove)
