@@ -19,11 +19,19 @@ describe SearchgovUrl do
   end
 
   describe 'validations' do
-    it "validates url uniqueness" do
-      existing = SearchgovUrl.create!(valid_attributes)
-      duplicate = SearchgovUrl.new(url: existing.url)
-      expect(duplicate).not_to be_valid
-      expect(duplicate.errors[:url].first).to match(/already been taken/)
+    describe 'validating url uniqueness' do
+      let!(:existing) { SearchgovUrl.create!(valid_attributes) }
+      it "validates url uniqueness" do
+        duplicate = SearchgovUrl.new(url: existing.url)
+        expect(duplicate).not_to be_valid
+        expect(duplicate.errors[:url].first).to match(/already been taken/)
+      end
+
+      it 'validates url uniqueness without protocol' do
+        duplicate = SearchgovUrl.new(url: 'https://www.agency.gov/boring.html')
+        expect(duplicate).not_to be_valid
+        expect(duplicate.errors[:url].first).to match(/already been taken/)
+      end
     end
 
     describe "normalizing URLs when saving" do
@@ -57,6 +65,7 @@ describe SearchgovUrl do
       it 'fetches and indexes the document' do
         expect(I14yDocument).to receive(:create).
           with(hash_including(
+            document_id: 'www.agency.gov/boring.html',
             handle: 'searchgov',
             path: url,
             title: 'My Title',

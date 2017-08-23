@@ -3,7 +3,7 @@ class SearchgovUrl < ActiveRecord::Base
 
   attr_accessible :last_crawl_status, :last_crawled_at, :url
 
-  validates_uniqueness_of :url
+  validate :unique_link
 
   before_validation :omit_query
 
@@ -41,6 +41,7 @@ class SearchgovUrl < ActiveRecord::Base
     document = HtmlDocument.new(document: file, url: url)
     Rails.logger.info "Indexing Searchgov URL #{url} into I14y"
     I14yDocument.create(
+                         document_id: url_without_protocol,
                          handle: 'searchgov',
                          path: url,
                          title: document.title,
@@ -55,5 +56,19 @@ class SearchgovUrl < ActiveRecord::Base
   def omit_query
     uri = Addressable::URI.parse(url)
     self.url = uri.try(:omit, :query).to_s
+  end
+
+  def unique_link
+    conditions = ['((url = ? OR url = ?))',
+                  "http://#{url_without_protocol}",
+                  "https://#{url_without_protocol}"]
+    id_conditions = persisted? ? ['id != ?',id] : []
+    if SearchgovUrl.where(conditions).where(id_conditions).any?
+      errors.add(:url, 'has already been taken')
+    end
+  end
+
+  def url_without_protocol
+    UrlParser.strip_http_protocols(url)
   end
 end
