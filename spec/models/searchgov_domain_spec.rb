@@ -25,4 +25,11 @@ RSpec.describe SearchgovDomain, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:searchgov_urls).dependent(:destroy) }
   end
+
+  describe 'validations' do
+    it 'validates the domain format' do
+      expect(SearchgovDomain.new(domain: 'foo')).not_to be_valid
+      expect(SearchgovDomain.new(domain: 'www.foo.gov')).to be_valid
+    end
+  end
 end
