@@ -1,4 +1,7 @@
-require 'rails_helper'
+#FIXME: require 'rails_helper'
+#git mv spec/spec_helper.rb spec/rails_helper.rb
+#https://relishapp.com/rspec/rspec-rails/docs/upgrade
+require 'spec_helper'
 
 RSpec.describe SearchgovDomain, type: :model do
   describe 'schema' do
@@ -14,7 +17,11 @@ RSpec.describe SearchgovDomain, type: :model do
       is_expected.to have_db_column(:status).of_type(:integer).
         with_options(null: false)
     end
-    it { is_expected.to have_db_index(:domain).unique(true) }
+    it { is_expected.to have_db_index(:domain) }#.unique(true)
+  end
+
+  describe 'associations' do
+    it { is_expected.to have_many(:searchgov_urls).dependent(:destroy) }
   end
 
   #readonly

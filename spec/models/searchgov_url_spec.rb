@@ -17,6 +17,10 @@ describe SearchgovUrl do
     it { is_expected.to have_db_index(:url) }
   end
 
+  describe 'associations' do
+    it { is_expected.to belong_to(:searchgov_domain) }
+  end
+
   describe 'validations' do
     describe 'validating url uniqueness' do
       let!(:existing) { SearchgovUrl.create!(valid_attributes) }

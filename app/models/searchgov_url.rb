@@ -24,6 +24,8 @@ class SearchgovUrl < ActiveRecord::Base
   before_validation :escape_url
   before_destroy :delete_document
 
+  belongs_to :searchgov_domain
+
   class SearchgovUrlError < StandardError; end
 
   def fetch

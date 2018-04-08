@@ -1,7 +1,7 @@
 class CreateSearchgovDomains < ActiveRecord::Migration
   def change
     create_table :searchgov_domains do |t|
-      t.string :domain
+      t.string :domain, null: false
       t.boolean :clean_urls, null: false, default: true
       t.integer :status, null: false
 
