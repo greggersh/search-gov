@@ -4,6 +4,8 @@
 require 'spec_helper'
 
 RSpec.describe SearchgovDomain, type: :model do
+  it { is_expected.to have_readonly_attribute(:domain) }
+
   describe 'schema' do
     it do
       is_expected.to have_db_column(:domain).of_type(:string).
@@ -23,6 +25,4 @@ RSpec.describe SearchgovDomain, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:searchgov_urls).dependent(:destroy) }
   end
-
-  #readonly
 end

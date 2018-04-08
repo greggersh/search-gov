@@ -15,6 +15,7 @@ class SearchgovUrl < ActiveRecord::Base
 
   attr_accessible :last_crawl_status, :last_crawled_at, :url
   attr_reader :response, :document
+  attr_readonly :url
 
   validate :unique_link
   validates :url_extension,

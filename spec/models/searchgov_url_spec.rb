@@ -7,6 +7,8 @@ describe SearchgovUrl do
   let(:searchgov_url) { SearchgovUrl.new(valid_attributes) }
   let(:i14y_document) { I14yDocument.new }
 
+  it { is_expected.to have_readonly_attribute(:url) }
+
   describe 'schema' do
     it { is_expected.to have_db_column(:url).of_type(:string).
          with_options(null: false, limit: 2000) }
